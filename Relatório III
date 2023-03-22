@@ -1,0 +1,55 @@
+import pandas as pd
+dados = pd.read_csv('dados/aluguel.csv', sep = ';')
+dados.head(10)
+
+lista com todos os 'Tipos' da lista dados
+list(dados['Tipo'].drop_duplicates())
+
+#copiamos e excluímos aquilo que não era residencial, criandouma nova lista = residencial
+residencial = ['Quitinete',  
+ 'Casa',
+ 'Apartamento',
+ 'Casa de Condomínio',
+ 'Casa de Vila']
+ residencial
+ 
+ # chamamosos 10 primeiros da lista dados
+ dados.head(10) 
+ 
+ # Analisamos todos os 10 primeiros 'Tipos' da lista dados, verificandose era residencial 'True' ou 'False' pormeioda lista residencial
+ dados['Tipo'].isin(residencial).head(10) 
+ 
+ # Passei a ultima listagempara umvariavel chamada selecao
+ selecao = dados['Tipo'].isin(residencial)
+selecao
+
+#retornando apenas os valores True ou os residenciais
+dados_residencial = dados[selecao]
+dados_residencial
+
+# verificando se a listagem de cima estava correta
+list(dados_residencial['Tipo'].drop_duplicates())
+
+#tamanho do Data
+dados_residencial.shape[0] 
+
+# diferença de um Data para o outro depois da seleção
+dados.shape[0]
+
+# reoganizou o indice de 0 ao fim, na ordem correta
+dados_residencial.index = range(dados_residencial.shape[0])
+
+dados_residencial.head(15)
+
+# criamos uma pasta alguel_residencial para importar o arquivo
+dados_residencial.to_csv('dados/alguel_residencial.csv', sep =';') 
+
+dados_residencial_2 = pd.read_csv('dados/alguel_residencial.csv', sep = ';')
+# aqui ele acabou exportando o indice do Data Frame e não quero isso
+dados_residencial_2
+
+# para Exportar oData Frame sem o Indice
+dados_residencial.to_csv('dados/alguel_residencial.csv', sep =';', index = False) 
+
+dados_residencial_2 = pd.read_csv('dados/alguel_residencial.csv' , sep =';')
+dados_residencial_2
