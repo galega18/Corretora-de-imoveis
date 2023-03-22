@@ -1,0 +1,50 @@
+import pandas as pd
+
+dados = pd.read_csv('dados/aluguel.csv', sep = ';')
+
+# apresentação apenas dos 10 primeiros imoveis
+dados.head(10)
+
+#Selecionando apenas a variável desejada [Tipo]
+dados.Tipo # pode ser feito tambem: dados['Tipo']
+
+tipo_de_imovel = dados.Tipo
+type(tipo_de_imovel)
+
+## deletando os móveis duplicados
+tipo_de_imovel.drop_duplicates()
+
+tipo_de_imovel # dá pra ver que o dropnão fez alteração no arquivo
+
+# vai excluir dentro do arquivo as duplicatas
+tipo_de_imovel.drop_duplicates(inplace=True) 
+
+tipo_de_imovel
+
+# Organizando a visualização
+tipo_de_imovel = pd.DataFrame(tipo_de_imovel)
+tipo_de_imovel
+
+tipo_de_imovel.index
+
+#  tamanho do dataframe.
+tipo_de_imovel.shape[0]
+
+Essa é a informação que passaremos para o método range():
+range(tipo_de_imovel.shape[0])
+
+ #para ver como funciona
+for i in range(tipo_de_imovel.shape[0]): 
+    print(i)
+    
+# Enumerando da forma correta os imoveis
+tipo_de_imovel.index = range(tipo_de_imovel.shape[0])
+tipo_de_imovel.index
+tipo_de_imovel
+
+#renomeando a coluna
+tipo_de_imovel.columns.name = 'Id' 
+tipo_de_imovel
+
+
+   
