@@ -1,0 +1,55 @@
+import pandas as pd
+dados = pd.read_csv('dados/alguel_residencial.csv', sep = ';')
+dados.head(10)
+
+#Cria uma observação booleana se for is (True) 
+dados.isnull() 
+
+#Outra forma de filtra, se a informação for nula marca true
+dados.notnull()
+
+# observe que as informações mudam em valor, condominio e iptu, esses seriam os que teminformações nulas
+dados.info()
+
+# criei uma series boleana
+dados['Valor'].isnull()
+
+# vizualiza os registros da Variavel valor qe são nulos
+dados[dados['Valor'].isnull()]
+
+# criando variaveis e eliminando registros
+a = dados.shape[0] 
+dados.dropna(subset = ['Valor'], inplace = True)
+B = dados.shape[0]
+a - B
+
+# zerou os registros
+dados[dados['Valor'].isnull()]
+
+# assumindo que todo apartamento tem um condomínio, se esta informação estiver nula eu deleto
+ # quero ver apenas quantos tem esse problema, por isso uso o shape
+dados[dados['Condominio'].isnull()].shape[0]
+
+# se nos atentarmos a nossa seleção, verificaremos que ela nos fornece exatamente as assinaturas que deverão ser removidas
+selecao = (dados['Tipo'] == 'Apartamento') & (dados['Condominio'].isnull())
+
+# Para eliminar as assinaturas nulas selecionadas ao invés de coletá-las, iremos adicionar ~ em selecao,inverte a Series booleana.
+A = dados.shape[0] # eliminou 745 
+dados = dados[~selecao]
+B = dados.shape[0]
+A - B
+
+# Vamos verificar quantas assinaturas nulas temos em Condominio
+dados[dados['Condominio'].isnull()].shape[0]# temos 1068 nulos
+
+# O que faremos é manter esses dados, mas atribuir o valor 0 a eles
+dados = dados.fillna({'Condominio': 0,'IPTU':0})
+
+dados[dados['Condominio'].isnull()].shape[0]
+
+dados[dados['IPTU'].isnull()].shape[0]
+
+dados.info() # portanto, 21826 registros e nenhum deles é nulo.
+
+## salvando este arquivo, de forma que o DataFrame seja atualizado com as modificações que realizamos
+dados.to_csv('dados/alguel_residencial.csv', sep = ';', index = False)
