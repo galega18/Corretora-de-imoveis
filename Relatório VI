@@ -1,0 +1,59 @@
+import pandas as pd
+
+dados = pd.read_csv('dados/alguel_residencial.csv',sep = ';')
+dados.head(10)
+
+#Criaremos uma nova variável chamada Valor Bruto, que consistirá na união dos valores das variáveis Valor, Condominio e IPTU
+dados['Valor Bruto'] = dados['Valor']+ dados['Condominio'] + dados['IPTU']
+dados.head(10)
+
+#criaremos outra variável que armazenará o valor por metro quadrado, chamaremos essa nova variável de Valor m2
+dados['Valor m²'] = dados['Valor']/dados['Area']
+dados.head(10)
+
+#round(), que em tradução livre significa "arredondar" nesse caso apenas 2 casas decimais
+dados['Valor m²'] = dados['Valor m²'].round(2)
+dados
+
+# próximo passo é criar uma variável para o valor do bruto do metro quadrado(Valor Bruto m2)
+dados['Valor Bruto m²'] = (dados['Valor Bruto']/ dados['Valor m²']).round(2)
+dados.head(10)
+
+# Criaremos uma variável que abrigue os tipos de imóvel casa e apartamento
+#devemos coletar a variável Tipo e recolher esses marcadores e indentifica-los
+#Criaremos uma lista com a identificação das casas, então:
+casas=['Casa', 'Casa de Condomínio', 'Casa de Vila']
+
+# .Apply() esse método pertmite que apliquemos uma função à cada registro do DataFrame
+# a função apply lambda x que é a linha de dados, vai ser 'Casa' se x estiver contido em casas
+dados['Tipo Agregado']= dados['Tipo'].apply(lambda x: 'Casa' if x in casas else 'Apartamento')
+dados.head(30)
+
+# Excluindo Variáveis
+# a empresa decidiu que Valor Bruto e Valor Bruto m2 fossem excluídas do banco de dados.
+# Criamos um DataFrame auxiliar para explorarmos as possibilidades disponíveis.
+#passaremos uma lista de variáveis que serão utilizadas para o banco auxiliar
+
+dados_aux = pd.DataFrame(dados[['Tipo Agregado', 'Valor m²', 'Valor Bruto', 'Valor Bruto m²']])
+dados_aux.head(10)
+
+#Para excluirmos uma variável do banco de dados, 
+#usaremos o termo del, passaremos o DataFrame em questão e explicitaremos o nome da variável a ser deletada:
+del dados_aux['Valor Bruto']
+dados_aux
+
+# Outra maneira de excluir variáveis é utilizar o método pop(). Excluiremos neste exemplo a variável Valor Bruto m2:
+dados_aux.pop('Valor Bruto m²')
+dados_aux
+
+# Uma maneira de excluirmos múltiplas variáveis é utilizando o método drop()
+#precisaremos especificar o eixo em que se dará a exclusão, 
+# uma vez que ele pode atuar especificamente em linhas ou colunas
+
+#escreveremos axis = 1, afinal o eixo 0 corresponde às linhas e o 1 colunas. Precisaremos, ainda, assinalar inplace como True.
+dados.drop(['Valor Bruto', 'Valor Bruto m²'], axis = 1, inplace = True)
+dados
+
+# precisaremos exportar e sobrescrever o arquivo do banco de dados
+# de forma que essa seja sua versão mais recente e atualizada.
+dados.to_csv('dados/alguel_residencial.cvs', sep = ';',index = False)
